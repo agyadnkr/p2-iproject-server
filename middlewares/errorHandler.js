@@ -22,8 +22,8 @@ const errorHandler = (err, req, res, next) => {
     case `NotFound`:
       res.status(404).json({ message: `Product not found` })
       break;
-    case `EmailInvalid`:
-      res.status(400).json({ message: `Invalid Email` })
+    case `UserNotFound`:
+      res.status(404).json({ message: `User not found` })
       break;
     case `PasswordInvalid`:
       res.status(400).json({ message: `Invalid Password` })
