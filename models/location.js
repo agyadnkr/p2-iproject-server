@@ -10,7 +10,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Location.hasMany(models.Image, {
+        foreignKey: 'LocationId',
+        sourceKey:  'id'
+      })
+      Location.belongsToMany(models.User, {
+        through: models.Favourite,
+        foreignKey: 'LocationId'
+      })
     }
   };
   Location.init({
@@ -19,7 +26,14 @@ module.exports = (sequelize, DataTypes) => {
     lattitude: DataTypes.STRING,
     longitude: DataTypes.STRING,
     mapsUrl: DataTypes.STRING,
-    price: DataTypes.INTEGER
+    price: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Price is required' },
+        notNull: { msg: 'Price is required' },
+      }
+    }
   }, {
     sequelize,
     modelName: 'Location',

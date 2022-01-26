@@ -1,4 +1,6 @@
 'use strict';
+const  { hashPassword } = require('../helpers/bcrpyt')
+
 const {
   Model
 } = require('sequelize');
@@ -10,16 +12,47 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      User.hasMany(models.Location, {
+        through: models.Favourite,
+        foreignKey: UserId
+      })
     }
   };
   User.init({
-    username: DataTypes.STRING,
-    password: DataTypes.STRING,
-    fullname: DataTypes.STRING
+    email: {
+      type: DataTypes.STRING,
+      unique: true,
+      validate: {
+        notEmpty: { msg: 'Email is required' },
+        isEmail: { msg: 'Email Format is invalid!' }
+      }
+    },
+    password: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: { msg: 'Password is required' },
+        len: {
+          args: [8,24],
+          msg: 'Password should be 8 to 24 characters long' 
+        }
+      }
+    },
+    fullname: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: { msg: 'Username is required' },
+      }
+    }
   }, {
     sequelize,
     modelName: 'User',
   });
+
+  //Hooks to hash password
+  User.beforeCreate(async (user, option)  => {
+    const hashedPass = await hashPassword(user.password);
+    user.password = hashedPass
+  })
+
   return User;
 };
