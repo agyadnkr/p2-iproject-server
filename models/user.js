@@ -12,9 +12,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasMany(models.Location, {
+      User.belongsToMany(models.Location, {
         through: models.Favourite,
-        foreignKey: UserId
+        foreignKey: 'UserId'
       })
     }
   };
@@ -25,6 +25,17 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: { msg: 'Email is required' },
         isEmail: { msg: 'Email Format is invalid!' }
+      }
+    },
+    username: {
+      type: DataTypes.STRING,
+      unique: true,
+      validate: {
+        notEmpty: { msg: 'Username is required' },
+        len: {
+          args: [6,24],
+          msg: 'Username should be 6 to 24 characters long' 
+        }
       }
     },
     password: {
