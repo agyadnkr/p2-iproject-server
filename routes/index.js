@@ -15,7 +15,7 @@ indexRouter.get('/locations/:id', LocationController.detail)
 
 indexRouter.use(authentication)
 
-// indexRouter.get('/favourite')
+indexRouter.get('/favourite', FavouriteController.fetchFavourites)
 indexRouter.post('/favourite/:LocationId', FavouriteController.addFavourite)
 
 module.exports = indexRouter

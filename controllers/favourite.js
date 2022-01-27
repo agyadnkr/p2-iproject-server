@@ -29,6 +29,23 @@ class FavouriteController {
       next(error)
     }
   }
+
+  static async fetchFavourites(req, res, next) {
+    try {
+      const { id } = req.user;
+
+      const result = await Favourite.findAll({
+        where: {
+          UserId: id
+        },
+        include: [Location]
+      })
+
+      res.status(200).json(result)
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = FavouriteController
