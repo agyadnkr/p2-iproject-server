@@ -2,7 +2,9 @@ const { User, Favourite, Location, Image } = require('../models')
 const { Op } = require('sequelize')
 const { createToken } = require('../helpers/jwt')
 const { comparePassword } = require('../helpers/bcrpyt')
+const { OAuth2Client } = require(`google-auth-library`)
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const client = new OAuth2Client(GOOGLE_CLIENT_ID)
 
 class UserController {
   static async register(req, res, next) {

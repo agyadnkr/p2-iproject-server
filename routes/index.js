@@ -4,6 +4,7 @@ const UserController = require('../controllers/user')
 const LocationController = require('../controllers/location')
 
 indexRouter.post('/login', UserController.login)
+indexRouter.post('/login/google', UserController.googleLogin)
 indexRouter.post('/register', UserController.register)
 
 indexRouter.get('/locations', LocationController.fetchLocations)
