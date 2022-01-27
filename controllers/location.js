@@ -29,6 +29,21 @@ class LocationController {
       next(error)
     }
   }
+
+  static async detail(req, res, next) {
+    try {
+      const { id } = req.param
+      const result = await Location.findOne({
+        Where: {
+          LocationId : id
+        },
+        include: [Image]
+      })
+      res.status(200).json(result)
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = LocationController
