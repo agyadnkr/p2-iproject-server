@@ -14,10 +14,15 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "postgres",
-    "password": "postgres",
-    "database": "iproject_p2",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "use_env_variable": "postgres://vofckjxpppvsjg:4a1ffefa08a34fcb05861578015738233866e2978a8c2744bb9d3cfb5a803136@ec2-54-208-139-247.compute-1.amazonaws.com:5432/dda8qjhbghghma",
+    "ssl": true,
+    "dialect": "postgres",
+    "protocol": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   }
 }
