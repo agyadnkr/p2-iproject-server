@@ -2,6 +2,7 @@ const { User, Favourite, Location, Image } = require('../models')
 const { Op } = require('sequelize')
 const { createToken } = require('../helpers/jwt')
 const { comparePassword } = require('../helpers/bcrpyt')
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
 
 class UserController {
   static async register(req, res, next) {
@@ -39,7 +40,7 @@ class UserController {
         throw ({ name: 'UserNotFound' })
       };
 
-      if(!comparePassword(password, findUser.password)) {
+      if (!comparePassword(password, findUser.password)) {
         throw ({ name: 'PasswordInvalid' })
       };
 
@@ -57,6 +58,32 @@ class UserController {
         username: findUser.username,
         email: findUser.email
       });
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async googleLogin(req, res, next) {
+    try {
+      const { token } = req.body
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: `${GOOGLE_CLIENT_ID}`
+      })
+
+      const payload = ticket.getPayload();
+
+      const [user, created] = await User.findOrCreate({
+        where: { email: payload.email },
+        defaults: {
+          password: "12345678",
+          username: `google-${payload.email}`
+        }
+      })
+
+      const accessToken = createToken({ id: user.id })
+      res.status(200).json({ access_token: accessToken, id: user.id, email: user.email })
+
     } catch (error) {
       next(error)
     }
