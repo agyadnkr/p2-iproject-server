@@ -1,9 +1,12 @@
 const indexRouter = require('express').Router()
 const authentication = require('../middlewares/authentication')
+const imageUpload  = require('../middlewares/imageUpload')
 
 const UserController = require('../controllers/user')
 const LocationController = require('../controllers/location')
 const FavouriteController = require('../controllers/favourite')
+
+indexRouter.post('/image-upload', imageUpload,  LocationController.uploadImage)
 
 indexRouter.post('/login', UserController.login)
 indexRouter.post('/login/google', UserController.googleLogin)
