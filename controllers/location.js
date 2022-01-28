@@ -32,11 +32,9 @@ class LocationController {
 
   static async detail(req, res, next) {
     try {
-      const { id } = req.param
-      const result = await Location.findOne({
-        Where: {
-          LocationId : id
-        },
+      const { id } = req.params
+      console.log(id)
+      const result = await Location.findByPk(id, {
         include: [Image]
       })
       res.status(200).json(result)

@@ -25,6 +25,9 @@ const errorHandler = (err, req, res, next) => {
     case `UserNotFound`:
       res.status(404).json({ message: `User not found` })
       break;
+    case `AlreadyOnFav`:
+      res.status(409).json({ message: `This location already on your favourite` })
+      break;
     case `PasswordInvalid`:
       res.status(400).json({ message: `Invalid Password` })
       break;

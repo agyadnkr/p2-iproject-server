@@ -2,7 +2,9 @@ const { User, Favourite, Location, Image } = require('../models')
 const { Op } = require('sequelize')
 const { createToken } = require('../helpers/jwt')
 const { comparePassword } = require('../helpers/bcrpyt')
+const { OAuth2Client } = require('google-auth-library')
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const client = new OAuth2Client(GOOGLE_CLIENT_ID)
 
 class UserController {
   static async register(req, res, next) {
@@ -70,14 +72,23 @@ class UserController {
         idToken: token,
         audience: `${GOOGLE_CLIENT_ID}`
       })
-
+      let username = '';
       const payload = ticket.getPayload();
+      let email = payload.email;
 
-      const [user, created] = await User.findOrCreate({
+      for (let i = 0; i < email.length; i++) {
+        if (email[i] === '@') {
+          break;
+        } else {
+          username += email[i]
+        }
+      }
+
+      const [user, created] = await User.findOrCreate({        
         where: { email: payload.email },
         defaults: {
           password: "12345678",
-          username: `google-${payload.email}`
+          username
         }
       })
 
